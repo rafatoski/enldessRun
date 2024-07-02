@@ -1,0 +1,35 @@
+#game {
+    width: 500px;
+    height: 200px;
+    border: 1px solid black;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+}
+
+#character {
+    width: 20px;
+    height: 50px;
+    background-color: red;
+    position: relative;
+    top: 150px;
+}
+
+#obstacle {
+    width: 20px;
+    height: 20px;
+    background-color: blue;
+    position: relative;
+    top: 130px;
+    left: 480px;
+}
+
+.animate {
+    animation: jump 0.3s linear;
+}
+
+@keyframes jump {
+    0% { top: 150px; }
+    50% { top: 100px; }
+    100% { top: 150px; }
+}
