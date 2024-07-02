@@ -1,35 +1,96 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+#game-container {
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 16 / 9;
+    position: relative;
+    overflow: hidden;
+}
+
 #game {
-    width: 500px;
-    height: 200px;
-    border: 1px solid black;
-    margin: auto;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
     position: relative;
     overflow: hidden;
 }
 
 #character {
-    width: 20px;
-    height: 50px;
+    width: 5%;
+    aspect-ratio: 1 / 2;
     background-color: red;
-    position: relative;
-    top: 150px;
+    position: absolute;
+    bottom: 20%;
+    left: 10%;
 }
 
 #obstacle {
-    width: 20px;
-    height: 20px;
+    width: 5%;
+    aspect-ratio: 1 / 1;
     background-color: blue;
-    position: relative;
-    top: 130px;
-    left: 480px;
+    position: absolute;
+    bottom: 20%;
+    right: -5%;
+}
+
+#start-screen, #game-over-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+#score-display {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.2em;
 }
 
 .animate {
-    animation: jump 0.3s linear;
+    animation: jump 0.5s;
 }
 
 @keyframes jump {
-    0% { top: 150px; }
-    50% { top: 100px; }
-    100% { top: 150px; }
+    0%, 100% { bottom: 20%; }
+    50% { bottom: 50%; }
+}
+
+@media (orientation: portrait) {
+    body {
+        transform: rotate(90deg);
+        transform-origin: left top;
+        width: 100vh;
+        height: 100vw;
+        overflow-x: hidden;
+        position: absolute;
+        top: 100%;
+        left: 0;
+    }
 }

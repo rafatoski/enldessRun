@@ -1,44 +1,86 @@
 const character = document.getElementById("character");
 const obstacle = document.getElementById("obstacle");
 const scoreDisplay = document.getElementById("score");
-let score = 0;
+const finalScoreDisplay = document.getElementById("final-score");
+const startScreen = document.getElementById("start-screen");
+const gameOverScreen = document.getElementById("game-over-screen");
+const startButton = document.getElementById("start-button");
+const restartButton = document.getElementById("restart-button");
+const game = document.getElementById("game");
 
-function jump() {
-    if (character.classList != "animate") {
-        character.classList.add("animate");
-    }
-    setTimeout(function(){
-        character.classList.remove("animate");
-    }, 300);
+let score = 0;
+let isGameRunning = false;
+
+function startGame() {
+    startScreen.classList.add("hidden");
+    gameOverScreen.classList.add("hidden");
+    score = 0;
+    scoreDisplay.textContent = score;
+    isGameRunning = true;
+    moveObstacle();
 }
 
-document.addEventListener("keydown", function(event) {
-    if (event.code === "Space") {
+function gameOver() {
+    isGameRunning = false;
+    finalScoreDisplay.textContent = score;
+    gameOverScreen.classList.remove("hidden");
+}
+
+function jump() {
+    if (!character.classList.contains("animate")) {
+        character.classList.add("animate");
+        setTimeout(() => {
+            character.classList.remove("animate");
+        }, 500);
+    }
+}
+
+function moveObstacle() {
+    if (!isGameRunning) return;
+
+    let obstacleRight = parseInt(window.getComputedStyle(obstacle).getPropertyValue("right"));
+    let characterBottom = parseInt(window.getComputedStyle(character).getPropertyValue("bottom"));
+    let characterRight = parseInt(window.getComputedStyle(character).getPropertyValue("right"));
+
+    if (obstacleRight > game.offsetWidth - 50 && obstacleRight < game.offsetWidth - 30 && characterBottom < 40) {
+        gameOver();
+        return;
+    }
+
+    if (obstacleRight > game.offsetWidth) {
+        obstacle.style.right = "-5%";
+        score++;
+        scoreDisplay.textContent = score;
+    } else {
+        obstacle.style.right = (obstacleRight + 5) + "px";
+    }
+
+    requestAnimationFrame(moveObstacle);
+}
+
+document.addEventListener("keydown", (event) => {
+    if (event.code === "Space" && isGameRunning) {
         jump();
     }
 });
 
-let isAlive = setInterval(function() {
-    let characterTop = parseInt(window.getComputedStyle(character).getPropertyValue("top"));
-    let obstacleLeft = parseInt(window.getComputedStyle(obstacle).getPropertyValue("left"));
-    
-    if (obstacleLeft < 20 && obstacleLeft > 0 && characterTop >= 130) {
-        alert("Game Over! Tu puntuación: " + score);
-        score = 0;
-    } else {
-        score++;
-        scoreDisplay.textContent = score;
+game.addEventListener("click", () => {
+    if (isGameRunning) {
+        jump();
     }
-}, 10);
+});
 
-function moveObstacle() {
-    let obstacleLeft = parseInt(window.getComputedStyle(obstacle).getPropertyValue("left"));
-    if (obstacleLeft < -20) {
-        obstacle.style.left = "480px";
+startButton.addEventListener("click", startGame);
+restartButton.addEventListener("click", startGame);
+
+// Mantener la orientación landscape
+function handleOrientation() {
+    if (window.orientation === 0 || window.orientation === 180) {
+        document.body.classList.add('portrait');
     } else {
-        obstacle.style.left = (obstacleLeft - 5) + "px";
+        document.body.classList.remove('portrait');
     }
-    requestAnimationFrame(moveObstacle);
 }
 
-moveObstacle();
+window.addEventListener('orientationchange', handleOrientation);
+handleOrientation();
